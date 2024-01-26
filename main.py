@@ -22,15 +22,13 @@ def read_card():
         (stat, raw_uid) = rdr.anticoll()
         if stat == rdr.OK:
             card_id = "uid: 0x%02x%02x%02x%02x" % (raw_uid[0], raw_uid[1], raw_uid[2], raw_uid[3])
-            #print(card_id)
             
             # Open or close the lock based on the card ID
             if card_id == "uid: 0xa4d6b15b":  # Replace with the actual card ID
-                if locked:
-                    # Code to open the lock
-                    print("Unlocking")
-                    time.sleep(2)
-                    print("Locking")
+                # Code to open the lock
+                print("Unlocking")
+                time.sleep(2)
+                print("Locking")
             else:
                 print("Access denied")
 
