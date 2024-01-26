@@ -1,15 +1,14 @@
 from mfrc522 import MFRC522
-from machine import Pin
-from machine import SPI
+from machine import Pin, SPI
 import time
 
-sck = 18
-mosi = 23  
-miso = 19  
-rst = 27   
-cs = 5     
+sck = Pin(18)
+mosi = Pin(23) 
+miso = Pin(19) 
+rst = Pin(27) 
+cs = Pin(5)  
 
-spi = SPI(2, baudrate=2500000, polarity=0, phase=0, sck=Pin(sck), mosi=Pin(mosi), miso=Pin(miso))
+spi = SPI(2, baudrate=2500000, polarity=0, phase=0, sck=sck, mosi=mosi, miso=miso)
 
 spi.init()
 rdr = MFRC522(spi=spi, gpioRst=4, gpioCs=5)
@@ -17,7 +16,7 @@ print("Place card")
 
 locked = True  # Variable to track the lock status
 
-while True:
+def read_card():
     (stat, tag_type) = rdr.request(rdr.REQIDL)
     if stat == rdr.OK:
         (stat, raw_uid) = rdr.anticoll()
@@ -34,3 +33,6 @@ while True:
                     print("Locking")
             else:
                 print("Access denied")
+
+while True:
+    read_card()
