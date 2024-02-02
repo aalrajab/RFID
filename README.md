@@ -1,4 +1,4 @@
-<!-- ----------------------------------------------------------------
+###
 Warum JSON:
 
 Einfach und Lesbar:
@@ -25,4 +25,4 @@ Bietet leistungsstarke SQL-Abfragen und Transaktionen für komplexe Anwendungen.
 LittleFS:
 Effizientes Dateisystem, jedoch weniger Query-Funktionen.
 Optimiert für Flash-Speicher, geeignet für einfache Dateispeicherung.
----------------------------------------------------------------- -->
+###
