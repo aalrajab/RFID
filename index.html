@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RFID Lock Control</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #1a1a1a;
+            color: #ffffff;
+            text-align: center;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            padding: 20px;
+        }
+
+        h1 {
+            color: #178202;
+            text-shadow: 2px 2px 4px #0dff0064;
+        }
+
+        .button {
+            display: inline-block;
+            padding: 10px 20px;
+            font-size: 1rem;
+            cursor: pointer;
+            background-color: #858585;
+            color: #000000;
+            border: 2px solid transparent;
+            border-radius: 8px;
+            transition: background-color 0.3s, color 0.3s, border 0.3s;
+        }
+
+        .button:hover {
+            background-color: #1abc9c;
+            color: #ffffff;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>RFID Lock Control</h1>
+        <button class="button" id="lockButton" onclick="lock()">Lock</button>
+        <button class="button" id="unlockButton" onclick="unlock()">Unlock</button>
+    </div>
+
+    <script>
+        function lock() {
+            fetch('/lock', { method: 'POST' })
+                .then(response => {
+                    if (response.ok) {
+                        console.log("Locking successful");
+                    } else {
+                        console.error("Locking failed");
+                    }
+                })
+                .catch(error => console.error('Error locking:', error));
+        }
+
+        function unlock() {
+            fetch('/unlock', { method: 'POST' })
+                .then(response => {
+                    if (response.ok) {
+                        console.log("Unlocking successful");
+                    } else {
+                        console.error("Unlocking failed");
+                    }
+                })
+                .catch(error => console.error('Error unlocking:', error));
+        }
+    </script>
+</body>
+</html>
