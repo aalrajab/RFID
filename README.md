@@ -16,6 +16,7 @@ Anpassungsfähige Struktur für einfache Modifikationen.
 Schnelles Prototyping:
 Unkompliziertes Speichern und Laden für schnelle Entwicklungszyklen.
 
+
 Vergleich mit SQLite und LittleFS:
 
 SQLite:
