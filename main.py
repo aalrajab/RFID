@@ -1,6 +1,8 @@
 import time
 import json
+import utime
 import hashlib
+import machine
 from mfrc522 import MFRC522
 from machine import Pin, SPI
 import network
@@ -13,8 +15,8 @@ with open("database.json", "r") as json_file:
     json_data = json.load(json_file)
 
 # Set up Wi-Fi connection
-ssid = "iphone"
-password = "ahmed12345"
+ssid = "ssid"
+password = "password"
 station = network.WLAN(network.STA_IF)
 station.active(True)
 station.connect(ssid, password)
@@ -88,14 +90,17 @@ while True:
                 print("Locking")
             else:
                 print("Access denied")
-                # Save the denied card in the JSON file
-                denied_card = {"id": card_id, "key": hashed_string, "date": time.strftime("%Y-%m-%d %H:%M:%S")}
-                print(denied_card)
-                json_data["key_false"].append(denied_card)
-                print(json_data)
 
-                # Update the JSON file
-                with open("database.json", "w") as json_file:
-                    json.dump(json_data, json_file)
-
+                if any(key_info["key"] == hashed_string for key_info in json_data["keys_false"]):
+                    print("NO")
+                else:
+            
+                    # Save the denied card in the JSON file
+                    denied_card = {"id": card_id, "key": hashed_string}
                 
+                    json_data["keys_false"].append(denied_card)
+                    print(json_data)
+
+                    # Update the JSON file
+                    with open("database.json", "w") as json_file:
+                        json.dump(json_data, json_file)     
