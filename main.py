@@ -14,8 +14,8 @@ with open("database.json", "r") as json_file:
     json_data = json.load(json_file)
 
 # Set up Wi-Fi connection
-ssid = "iphone"
-password = "ahmed12345"
+ssid = "Bababui"
+password = "5pazxter"
 station = network.WLAN(network.STA_IF)
 station.active(True)
 station.connect(ssid, password)
@@ -30,14 +30,15 @@ mosi = 23
 miso = 19
 rst = 27
 cs = 5
-lk = Pin(32, Pin.OUT)
+lk = Pin(2, Pin.OUT)
 
 spi = SPI(2, baudrate=2500000, polarity=0, phase=0, sck=Pin(sck), mosi=Pin(mosi), miso=Pin(miso))
 spi.init()
 rdr = MFRC522(spi=spi, gpioRst=4, gpioCs=5)
 
 
-def run_server(): # Create an instance of the Pin class
+def run_server():
+    """Function to run the web server and serve the HTML content."""
     if lk.value() == 1:
         lk_state = "locked"
     else:
@@ -50,8 +51,8 @@ def run_server(): # Create an instance of the Pin class
     return html 
 
 
-# Function to handle incoming HTTP requests
 def handle_request(conn):
+    """Function to handle incoming HTTP requests."""
     request = conn.recv(1024).decode('utf-8')
 
     if 'POST /lock' in request:
@@ -67,15 +68,6 @@ def handle_request(conn):
         conn.send("HTTP/1.1 200 OK\r\nContent-Type: text/html\r\n\r\n")
         conn.close()
         return
-
-    # # Build HTML content from JSON data
-    # html_content = "<html><body><h2>Keys True:</h2><ul>"
-    # for key_info in json_data["keys_true"]:
-    #     html_content += f"<li>ID: {key_info['id']}, Key: {key_info['key']}</li>"
-    # html_content += "</ul><h2>Key False:</h2><ul>"
-    # for key_info in json_data["keys_false"]:
-    #     html_content += f"<li>ID: {key_info['id']}, Key: {key_info['key']}</li>"
-    # html_content += "</ul></body></html>"
 
     # Send HTTP response
     html = run_server()
@@ -105,12 +97,14 @@ while True:
 
     while True:
         # Check RFID card ID
-        (stat, tag_type) = rdr.request(rdr.REQIDL)
+        (stat, tag_type) = rdr.request(rdr.REQIDL) # Request RFID tag detection
         if stat == rdr.OK:
-            (stat, raw_uid) = rdr.anticoll()
+            (stat, raw_uid) = rdr.anticoll() # Anticollision to get the unique ID of the card
             if stat == rdr.OK:
+                # Format the card ID
                 card_id = "uid: 0x%02x%02x%02x%02x" % (raw_uid[0], raw_uid[1], raw_uid[2], raw_uid[3])
                 card_id = str(card_id)
+                # Hash the card ID for security
                 hash_object = hashlib.sha256(card_id.encode())
                 hashed_string = ''.join('%02x' % byte for byte in hash_object.digest())
 
@@ -124,8 +118,10 @@ while True:
                 if lock:
                     # Code to open the lock
                     print("Unlocking")
+                    lk.on() # Turn the relay on
                     time.sleep(2)
                     print("Locking")
+                    lk.off() # Turn the relay off
                 else:
                     print("Access denied")
 
