@@ -16,6 +16,7 @@
 
         .container {
             padding: 20px;
+            display: none; /* Initially hide the container */
         }
 
         h1 {
@@ -42,23 +43,36 @@
     </style>
 </head>
 <body>
-    <div class="container">
+    <div id="passwordContainer"> <!-- New div to contain the password input -->
+        <h1>Password Protection</h1>
+        <form id="passwordForm">
+            <label for="password">Enter Password:</label>
+            <input type="password" id="password" name="password">
+            <button type="button" onclick="checkPassword()">Submit</button> <!-- Change type to button to prevent automatic form submission -->
+            <p id="error" style="color: red; display: none;">Incorrect password. Please try again.</p>
+        </form>
+    </div>
+
+    <div class="container" id="contentContainer"> <!-- New container for the content -->
         <h1>RFID Lock Control</h1>
-        <button class="button" id="lockButton" onclick="lock()">Lock</button>
         <button class="button" id="unlockButton" onclick="unlock()">Unlock</button>
     </div>
 
     <script>
-        function lock() {
-            fetch('/lock', { method: 'POST' })
-                .then(response => {
-                    if (response.ok) {
-                        console.log("Locking successful");
-                    } else {
-                        console.error("Locking failed");
-                    }
-                })
-                .catch(error => console.error('Error locking:', error));
+        function checkPassword() {
+            var password = document.getElementById("password").value;
+
+            // Array of valid passwords
+            var validPasswords = ["pass", "password", "123456"];
+
+            if (validPasswords.includes(password)) {
+                // Show the content container and hide the password container
+                document.getElementById("passwordContainer").style.display = "none";
+                document.getElementById("contentContainer").style.display = "block";
+            } else {
+                // Display error message
+                document.getElementById("error").style.display = "block";
+            }
         }
 
         function unlock() {
