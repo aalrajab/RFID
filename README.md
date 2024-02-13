@@ -27,3 +27,11 @@ LittleFS:
 Effizientes Dateisystem, jedoch weniger Query-Funktionen.
 Optimiert für Flash-Speicher, geeignet für einfache Dateispeicherung.
 ###
+mfrc522 library von -> 
+###
+Zur leichten Eingabe zwecks Kontrolle, ob der Webserver auch das richtige Passwort akzeptiert.
+Funktioniert:           weiße Karte : "uid: 0xa4d6b15b"
+Funktioniert nicht:     blauer Chip : "uid: 0x79307de2"
+###
+Nur die id des physischen rfid-Objekts wird gespeichert, nicht die falschen Eingaben beim Webserver, da es zu viele Eingabemöglichkeiten gibt.
+###
