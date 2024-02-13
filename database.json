@@ -1,1 +1,11 @@
-{"keys_true": [{"id": 0, "key": "332be3ecefdf9062023c564b136a881b1950e4015f7a8717ed67a3c823380629"}, {"id": 1, "key": "test"}], "keys_false": [{"id": 0, "key": ""}]}
+{
+    "keys_true": [
+      "332be3ecefdf9062023c564b136a881b1950e4015f7a8717ed67a3c823380629"
+    ],
+    "keys_false": [
+      {
+        "id": 0,
+        "key": "Test"
+      }
+    ]
+  }
