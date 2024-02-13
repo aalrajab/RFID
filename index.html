@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -42,9 +43,10 @@
         }
     </style>
 </head>
+
 <body>
     <div id="passwordContainer"> <!-- New div to contain the password input -->
-        <h1>Password Protection</h1>
+        <h1>Please Enter Your Password</h1>
         <form id="passwordForm">
             <label for="password">Enter Password:</label>
             <input type="password" id="password" name="password">
@@ -59,20 +61,36 @@
     </div>
 
     <script>
+        function hashPassword(password) {
+            // Hash password using SHA-256
+            var hashedPassword = CryptoJS.SHA256(password).toString(CryptoJS.enc.Hex);
+            return hashedPassword;
+        }
+
         function checkPassword() {
             var password = document.getElementById("password").value;
+            var hashedPassword = hashPassword(password); // Hash the entered password
 
-            // Array of valid passwords
-            var validPasswords = ["pass", "password", "123456"];
+            // Fetch the JSON data containing valid passwords
+            fetch("database.json")
+            .then(response => response.json())
+            .catch(error => console.log(error))
+            .then(data => {
+                // Parse the JSON string to extract keys_true array
+                var jsonData = data;
+                var validPasswords = jsonData.keys_true;
 
-            if (validPasswords.includes(password)) {
-                // Show the content container and hide the password container
-                document.getElementById("passwordContainer").style.display = "none";
-                document.getElementById("contentContainer").style.display = "block";
-            } else {
-                // Display error message
-                document.getElementById("error").style.display = "block";
-            }
+                // Check if entered password is in the keys_true array
+                if (validPasswords.includes(hashedPassword)) {
+                    // Show the content container and hide the password container
+                    document.getElementById("passwordContainer").style.display = "none";
+                    document.getElementById("contentContainer").style.display = "block";
+                } else {
+                    // Display error message
+                    document.getElementById("error").style.display = "block";
+                }
+            })
+            .catch(error => console.error('Error fetching data:', error));
         }
 
         function unlock() {
@@ -87,5 +105,8 @@
                 .catch(error => console.error('Error unlocking:', error));
         }
     </script>
+
+    <!-- Include CryptoJS library for SHA-256 hashing -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
 </body>
 </html>
