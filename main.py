@@ -99,10 +99,10 @@ def handle_web_server():
         conn, addr = web_socket.accept()
         handle_request(conn)
 
-while True:
-    # Start the thread for the web server
-    _thread.start_new_thread(handle_web_server, ())
+# Start the thread for the web server
+_thread.start_new_thread(handle_web_server, ())
 
+while True:
     card_id = "None"
     lock = False
 
