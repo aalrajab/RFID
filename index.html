@@ -41,6 +41,23 @@
             background-color: #1abc9c;
             color: #ffffff;
         }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        th, td {
+            border: 1px solid #ffffff;
+            padding: 8px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #858585;
+            color: #ffffff;
+        }
     </style>
 </head>
 
@@ -60,6 +77,9 @@
         <button class="button" id="unlockButton" onclick="unlock()">Unlock</button>
     </div>
 
+    <!-- New div to display fetched JSON data as a table -->
+    <div id="jsonDataContainer"></div>
+
     <script>
         function hashPassword(password) {
             // Hash password using SHA-256
@@ -74,7 +94,6 @@
             // Fetch the JSON data containing valid passwords
             fetch("database.json")
             .then(response => response.json())
-            .catch(error => console.log(error))
             .then(data => {
                 // Parse the JSON string to extract keys_true array
                 var jsonData = data;
@@ -85,6 +104,31 @@
                     // Show the content container and hide the password container
                     document.getElementById("passwordContainer").style.display = "none";
                     document.getElementById("contentContainer").style.display = "block";
+
+                    // Display fetched JSON data as a table
+                    var tableHtml = "<table><tr><th>Key</th><th>Value</th></tr>";
+                    for (var key in jsonData) {
+                        if (jsonData.hasOwnProperty(key)) {
+                            if (Array.isArray(jsonData[key])) {
+                                // If the value is an array, stringify it
+                                tableHtml += "<tr><td>" + key + "</td><td>" + JSON.stringify(jsonData[key]) + "</td></tr>";
+                            } else if (typeof jsonData[key] === 'object') {
+                                // If the value is an object, stringify each property
+                                var objectString = "";
+                                for (var prop in jsonData[key]) {
+                                    if (jsonData[key].hasOwnProperty(prop)) {
+                                        objectString += prop + ": " + jsonData[key][prop] + ", ";
+                                    }
+                                }
+                                tableHtml += "<tr><td>" + key + "</td><td>" + objectString.slice(0, -2) + "</td></tr>";
+                            } else {
+                                // Otherwise, display the value as is
+                                tableHtml += "<tr><td>" + key + "</td><td>" + jsonData[key] + "</td></tr>";
+                            }
+                        }
+                    }
+                    tableHtml += "</table>";
+                    document.getElementById("jsonDataContainer").innerHTML = tableHtml;
                 } else {
                     // Display error message
                     document.getElementById("error").style.display = "block";
